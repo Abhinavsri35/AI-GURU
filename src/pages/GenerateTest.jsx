@@ -110,7 +110,6 @@ export default function GenerateTest() {
           </div>
         )}
 
-        {/* Step 0: Configure */}
         {step === 0 && (
           <div className="card animate-slide-up">
             <h2 className="section-title mb-6">Test Setup</h2>
