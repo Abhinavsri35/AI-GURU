@@ -189,7 +189,7 @@ export default function TeacherDashboard() {
               <table className="w-full">
                 <thead>
                   <tr className="border-b border-white/5">
-                    {['Subject Title', 'Topic', 'Questions', 'Status', 'Created'].map(h => (
+                    {['Subject Title', 'Topic', 'Code', 'Questions', 'Status', 'Created'].map(h => (
                       <th key={h} className="text-left pb-3 text-xs font-body font-medium text-slate-500 uppercase tracking-widest">{h}</th>
                     ))}
                   </tr>
@@ -202,6 +202,13 @@ export default function TeacherDashboard() {
                       </td>
                       <td className="py-4 pr-4">
                         <span className="badge-blue">{test.topic}</span>
+                      </td>
+                      <td className="py-4 pr-4">
+                        {test.testCode ? (
+                          <span className="font-mono text-sm tracking-widest text-gold-400 font-semibold bg-gold-400/10 px-2 py-1 rounded-md border border-gold-400/20">{test.testCode}</span>
+                        ) : (
+                          <span className="text-slate-500 text-xs italic">N/A</span>
+                        )}
                       </td>
                       <td className="py-4 pr-4 text-slate-400 font-body text-sm">{test.questions?.length || 0}</td>
                       <td className="py-4 pr-4">

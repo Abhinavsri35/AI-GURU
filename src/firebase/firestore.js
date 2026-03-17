@@ -11,6 +11,7 @@ import {
   getDocs,
   orderBy,
   serverTimestamp,
+  limit,
 } from 'firebase/firestore'
 import { db } from './firebaseConfig'
 
@@ -41,6 +42,18 @@ export const createTest = async (testData) => {
 export const getTestById = async (testId) => {
   const snap = await getDoc(doc(db, 'tests', testId))
   return snap.exists() ? { id: snap.id, ...snap.data() } : null
+}
+
+export const getTestByCode = async (code) => {
+  const q = query(
+    collection(db, 'tests'),
+    where('testCode', '==', code.toUpperCase()),
+    limit(1)
+  )
+  const snap = await getDocs(q)
+  if (snap.empty) return null
+  const d = snap.docs[0]
+  return { id: d.id, ...d.data() }
 }
 
 export const getTestsByTeacher = async (teacherId) => {

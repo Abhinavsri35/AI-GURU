@@ -1,7 +1,3 @@
-// src/services/aiService.js
-// Calls Google Gemini API (gemini-1.5-flash) for AI features
-// API key is stored in .env as VITE_GEMINI_API_KEY
-
 const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY
 const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${GEMINI_API_KEY}`
 
@@ -90,12 +86,7 @@ Keep it concise, friendly, and motivating. No bullet points — use short paragr
   return await callGemini(prompt)
 }
 
-/**
- * Generate a study hint for a specific question
- * @param {string} questionText
- * @param {string} correctAnswer
- * @returns {Promise<string>} hint text
- */
+
 export const getQuestionHint = async (questionText, correctAnswer) => {
   const prompt = `
 A student is struggling with this question: "${questionText}"

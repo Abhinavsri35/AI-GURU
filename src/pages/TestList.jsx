@@ -1,143 +1,127 @@
 // src/pages/TestList.jsx
-import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { getTestByCode, getResultsByStudent } from '../firebase/firestore'
 import { useAuth } from '../context/AuthContext'
-import { getAllPublishedTests, getResultsByStudent } from '../firebase/firestore'
-
-const difficultyColor = {
-  Easy: 'badge-green',
-  Medium: 'badge-gold',
-  Hard: 'badge-red',
-}
 
 export default function TestList() {
+  const [code, setCode] = useState('')
+  const [error, setError] = useState('')
+  const [loading, setLoading] = useState(false)
+  const navigate = useNavigate()
   const { userProfile } = useAuth()
-  const [tests, setTests] = useState([])
-  const [filtered, setFiltered] = useState([])
-  const [attemptMap, setAttemptMap] = useState({})
-  const [loading, setLoading] = useState(true)
-  const [search, setSearch] = useState('')
-  const [diffFilter, setDiffFilter] = useState('All')
 
-  useEffect(() => {
-    if (!userProfile?.id) return
-    Promise.all([
-      getAllPublishedTests(),
-      getResultsByStudent(userProfile.id)
-    ])
-      .then(([testData, results]) => {
-        setTests(testData)
-        setFiltered(testData)
-        const map = {}
-        results.forEach(r => { map[r.testId] = r.id })
-        setAttemptMap(map)
-      })
-      .finally(() => setLoading(false))
-  }, [userProfile?.id])
+  const handleJoin = async (e) => {
+    e.preventDefault()
+    const cleanCode = code.trim().toUpperCase()
+    if (!cleanCode) return
+    if (cleanCode.length !== 6) {
+      setError('Test code must be 6 characters long.')
+      return
+    }
 
-  useEffect(() => {
-    let result = tests
-    if (search) {
-      const q = search.toLowerCase()
-      result = result.filter(t =>
-        t.title?.toLowerCase().includes(q) ||
-        t.topic?.toLowerCase().includes(q)
-      )
+    setError('')
+    setLoading(true)
+
+    try {
+      // 1. Find the test by code
+      const test = await getTestByCode(cleanCode)
+      if (!test) {
+        setError('No test found with this code. Please check and try again.')
+        setLoading(false)
+        return
+      }
+
+      // 2. Check if the test is actually published
+      if (!test.published) {
+        setError('This test is not currently published or available.')
+        setLoading(false)
+        return
+      }
+
+      // 3. Check if the student has already taken it
+      const results = await getResultsByStudent(userProfile.id)
+      const existingAttempt = results.find(r => r.testId === test.id)
+
+      if (existingAttempt) {
+        // Redirect to their result
+        navigate(`/result/${existingAttempt.id}`)
+      } else {
+        // Redirect to attempt the test
+        navigate(`/student/test/${test.id}`)
+      }
+
+    } catch (err) {
+      console.error(err)
+      setError('An error occurred while joining the test.')
+      setLoading(false)
     }
-    if (diffFilter !== 'All') {
-      result = result.filter(t => t.difficulty === diffFilter)
-    }
-    setFiltered(result)
-  }, [search, diffFilter, tests])
+  }
 
   return (
-    <div className="min-h-screen mesh-bg">
+    <div className="min-h-screen mesh-bg flex items-center justify-center p-4">
+      
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-1/4 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gold-400/5 to-transparent" />
+      </div>
 
-      <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-
-        <div className="mb-8 animate-fade-in">
-          <h1 className="page-title mb-1">Available Tests</h1>
-          <p className="text-slate-400 font-body text-sm">Choose a test to attempt</p>
+      <div className="w-full max-w-md animate-fade-in relative z-10 -mt-20">
+        
+        <div className="text-center mb-8">
+          <div className="inline-flex items-center gap-3 mb-3">
+            <div className="w-12 h-12 rounded-2xl bg-gold-400/10 border border-gold-400/20 flex items-center justify-center">
+              <span className="text-gold-400 text-2xl">🔐</span>
+            </div>
+          </div>
+          <h1 className="text-2xl font-display font-semibold text-white">Join a Test</h1>
+          <p className="text-slate-400 font-body text-sm mt-2">Enter the 6-character code provided by your teacher.</p>
         </div>
 
-        {/* Filters */}
-        <div className="flex flex-col sm:flex-row gap-3 mb-8">
-          <input
-            type="text"
-            value={search}
-            onChange={e => setSearch(e.target.value)}
-            className="input flex-1"
-            placeholder="Search by topic or title…"
-          />
-          <div className="flex gap-2">
-            {['All', 'Easy', 'Medium', 'Hard'].map(d => (
-              <button
-                key={d}
-                onClick={() => setDiffFilter(d)}
-                className={`px-4 py-2.5 rounded-xl border text-sm font-body font-medium transition-all
-                  ${diffFilter === d
-                    ? 'border-gold-400/60 bg-gold-400/10 text-gold-400'
-                    : 'border-white/10 text-slate-400 hover:border-white/20 hover:text-white'}`}
-              >
-                {d}
-              </button>
-            ))}
+        <div className="card shadow-2xl shadow-black/50">
+          {error && (
+            <div className="mb-6 px-4 py-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm font-body text-center">
+              {error}
+            </div>
+          )}
+
+          <form onSubmit={handleJoin} className="space-y-6">
+            <div>
+              <label className="label text-center block mb-3">Test Code</label>
+              <input
+                type="text"
+                maxLength={6}
+                value={code}
+                onChange={e => setCode(e.target.value.toUpperCase())}
+                className="input text-center text-3xl font-mono tracking-[0.5em] py-4 shadow-inner bg-navy-950/50 uppercase placeholder:text-white/10"
+                placeholder="XXXXXX"
+                required
+              />
+            </div>
+
+            <button
+              type="submit"
+              disabled={loading || code.trim().length !== 6}
+              className="btn-primary w-full flex items-center justify-center gap-2 py-3.5 text-base"
+            >
+              {loading ? (
+                <>
+                  <div className="w-5 h-5 border-2 border-navy-950/30 border-t-navy-950 rounded-full animate-spin" />
+                  Locating Test…
+                </>
+              ) : (
+                <>Enter Test →</>
+              )}
+            </button>
+          </form>
+
+          <div className="mt-6 pt-6 border-t border-white/5 text-center">
+            <p className="text-xs text-slate-500 font-body">
+              Are you a teacher? <br className="sm:hidden" /> Codes are generated in your dashboard automatically.
+            </p>
           </div>
         </div>
 
-        {/* Test Grid */}
-        {loading ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {[1,2,3,4,5,6].map(i => <div key={i} className="skeleton h-44 rounded-2xl" />)}
-          </div>
-        ) : filtered.length === 0 ? (
-          <div className="text-center py-20">
-            <p className="text-4xl mb-3">🔍</p>
-            <p className="text-slate-400 font-body">No tests match your search.</p>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 animate-slide-up">
-            {filtered.map(test => (
-              <div key={test.id} className="card group hover:border-gold-400/20 transition-all duration-200 flex flex-col">
-                <div className="flex items-start justify-between mb-3">
-                  <span className={difficultyColor[test.difficulty] || 'badge-gold'}>
-                    {test.difficulty}
-                  </span>
-                  <span className="text-slate-500 text-xs font-body">
-                    {test.questions?.length || 0} Qs
-                  </span>
-                </div>
-
-                <h3 className="text-white font-body font-semibold text-base mb-1 leading-snug flex-1">
-                  {test.title}
-                </h3>
-                <p className="text-slate-400 font-body text-sm mb-4">{test.topic}</p>
-
-                <div className="flex items-center justify-between mt-auto pt-4 border-t border-white/5">
-                  <span className="text-xs text-slate-500 font-body">
-                    {test.createdAt?.toDate?.()?.toLocaleDateString() || '—'}
-                  </span>
-                  {attemptMap[test.id] ? (
-                    <Link
-                      to={`/result/${attemptMap[test.id]}`}
-                      className="btn-secondary text-sm py-2 px-4 opacity-80"
-                    >
-                      View Result
-                    </Link>
-                  ) : (
-                    <Link
-                      to={`/student/test/${test.id}`}
-                      className="btn-primary text-sm py-2 px-4"
-                    >
-                      Start →
-                    </Link>
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-      </main>
+      </div>
     </div>
   )
 }

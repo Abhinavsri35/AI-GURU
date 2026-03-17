@@ -56,11 +56,15 @@ export default function GenerateTest() {
   const handlePublish = async (publish) => {
     setSaving(true)
     try {
+      // Generate a random 6-character alphanumeric code
+      const testCode = Math.random().toString(36).substring(2, 8).toUpperCase()
+
       const testId = await createTest({
         title: form.title || `${form.topic} — ${form.difficulty}`,
         topic: form.topic,
         difficulty: form.difficulty,
         timeLimit: Number(form.timeLimit) || 0,
+        testCode, // Attach the unique code
         questions,
         createdBy: userProfile.id,
         published: publish,
@@ -303,6 +307,10 @@ export default function GenerateTest() {
               <div className="flex justify-between py-3 border-b border-white/5">
                 <span className="text-slate-400 font-body text-sm">Time Limit</span>
                 <span className="text-white font-body text-sm font-medium">{form.timeLimit > 0 ? `${form.timeLimit} min` : 'Untimed'}</span>
+              </div>
+              <div className="flex justify-between py-3 border-b border-white/5">
+                <span className="text-slate-400 font-body text-sm">Test Code</span>
+                <span className="badge-blue">Auto-generated upon publish</span>
               </div>
               <div className="flex justify-between py-3">
                 <span className="text-slate-400 font-body text-sm">Questions</span>
