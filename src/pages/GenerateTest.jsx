@@ -1,7 +1,7 @@
 // src/pages/GenerateTest.jsx
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import Navbar from '../components/Navbar'
+
 import QuestionCard from '../components/QuestionCard'
 import { useAuth } from '../context/AuthContext'
 import { generateQuestions } from '../services/aiService'
@@ -17,7 +17,7 @@ export default function GenerateTest() {
   const navigate = useNavigate()
 
   const [step, setStep] = useState(0)
-  const [form, setForm] = useState({ topic: '', title: '', difficulty: 'Medium', count: 5 })
+  const [form, setForm] = useState({ topic: '', title: '', difficulty: 'Medium', count: 5, timeLimit: 15 })
   const [questions, setQuestions] = useState([])
   const [generating, setGenerating] = useState(false)
   const [saving, setSaving] = useState(false)
@@ -60,6 +60,7 @@ export default function GenerateTest() {
         title: form.title || `${form.topic} — ${form.difficulty}`,
         topic: form.topic,
         difficulty: form.difficulty,
+        timeLimit: Number(form.timeLimit) || 0,
         questions,
         createdBy: userProfile.id,
         published: publish,
@@ -75,12 +76,12 @@ export default function GenerateTest() {
 
   return (
     <div className="min-h-screen mesh-bg">
-      <Navbar />
+
       <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
 
         {/* Header */}
         <div className="mb-8 animate-fade-in">
-          <h1 className="page-title mb-1">Generate AI Test</h1>
+          <h1 className="page-title mb-1">Create Test</h1>
           <p className="text-slate-400 font-body text-sm">Powered by Google Gemini</p>
         </div>
 
@@ -112,12 +113,12 @@ export default function GenerateTest() {
         {/* Step 0: Configure */}
         {step === 0 && (
           <div className="card animate-slide-up">
-            <h2 className="section-title mb-6">Test Configuration</h2>
+            <h2 className="section-title mb-6">Test Setup</h2>
             <form onSubmit={handleGenerate} className="space-y-6">
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="sm:col-span-2">
-                  <label className="label">Test title <span className="text-slate-500">(optional)</span></label>
+                  <label className="label">Subject title <span className="text-slate-500">(optional)</span></label>
                   <input
                     value={form.title}
                     onChange={e => setForm({ ...form, title: e.target.value })}
@@ -173,6 +174,18 @@ export default function GenerateTest() {
                       </button>
                     ))}
                   </div>
+                </div>
+
+                <div className="sm:col-span-2">
+                  <label className="label">Time Limit (minutes) <span className="text-slate-500">(0 = untimed)</span></label>
+                  <input
+                    type="number"
+                    min="0"
+                    value={form.timeLimit}
+                    onChange={e => setForm({ ...form, timeLimit: e.target.value })}
+                    className="input"
+                    placeholder="e.g. 15"
+                  />
                 </div>
               </div>
 
@@ -287,6 +300,10 @@ export default function GenerateTest() {
               <div className="flex justify-between py-3 border-b border-white/5">
                 <span className="text-slate-400 font-body text-sm">Difficulty</span>
                 <span className="badge-gold">{form.difficulty}</span>
+              </div>
+              <div className="flex justify-between py-3 border-b border-white/5">
+                <span className="text-slate-400 font-body text-sm">Time Limit</span>
+                <span className="text-white font-body text-sm font-medium">{form.timeLimit > 0 ? `${form.timeLimit} min` : 'Untimed'}</span>
               </div>
               <div className="flex justify-between py-3">
                 <span className="text-slate-400 font-body text-sm">Questions</span>

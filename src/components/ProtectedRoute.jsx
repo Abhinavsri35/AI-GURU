@@ -20,6 +20,10 @@ export default function ProtectedRoute({ children, role }) {
     return <Navigate to="/login" replace />
   }
 
+  if (!currentUser.emailVerified) {
+    return <Navigate to="/login" replace />
+  }
+
   // If a specific role is required, check it
   if (role && userProfile?.role !== role) {
     const redirect = userProfile?.role === 'teacher' ? '/teacher/dashboard' : '/student/dashboard'

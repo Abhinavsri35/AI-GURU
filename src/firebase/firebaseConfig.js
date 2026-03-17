@@ -1,7 +1,3 @@
-// src/firebase/firebaseConfig.js
-// Replace these values with your actual Firebase project configuration
-// Get them from: Firebase Console → Project Settings → Your Apps → Web App
-
 import { initializeApp } from 'firebase/app'
 import { getAuth } from 'firebase/auth'
 import { getFirestore } from 'firebase/firestore'

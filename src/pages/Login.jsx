@@ -1,7 +1,7 @@
 // src/pages/Login.jsx
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { loginUser } from '../firebase/auth'
+import { loginUser, logoutUser } from '../firebase/auth'
 import { getUserDocument } from '../firebase/firestore'
 import { useAuth } from '../context/AuthContext'
 
@@ -14,7 +14,7 @@ export default function Login() {
   const { currentUser, userProfile } = useAuth()
 
   // If already logged in, redirect
-  if (currentUser && userProfile) {
+  if (currentUser && userProfile && currentUser.emailVerified) {
     navigate(userProfile.role === 'teacher' ? '/teacher/dashboard' : '/student/dashboard')
   }
 
@@ -24,6 +24,11 @@ export default function Login() {
     setLoading(true)
     try {
       const user = await loginUser(email, password)
+      if (!user.emailVerified) {
+        await logoutUser()
+        setError('Please verify your email address before logging in. Check your inbox.')
+        return
+      }
       const profile = await getUserDocument(user.uid)
       navigate(profile?.role === 'teacher' ? '/teacher/dashboard' : '/student/dashboard')
     } catch (err) {
@@ -59,7 +64,7 @@ export default function Login() {
               <span className="text-gold-400 text-lg">⚡</span>
             </div>
             <h1 className="text-2xl font-display font-semibold text-white">
-              Vidya<span className="text-gold-400">AI</span>
+              AI<span className="text-gold-400">Guru</span>
             </h1>
           </div>
           <p className="text-slate-400 font-body text-sm">Smart Classroom Assessment Platform</p>

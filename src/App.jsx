@@ -1,7 +1,7 @@
-// src/App.jsx
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { AuthProvider } from './context/AuthContext'
 import ProtectedRoute from './components/ProtectedRoute'
+import Layout from './components/Layout'
 
 import Login from './pages/Login'
 import Register from './pages/Register'
@@ -11,22 +11,22 @@ import GenerateTest from './pages/GenerateTest'
 import TestList from './pages/TestList'
 import AttemptTest from './pages/AttemptTest'
 import Result from './pages/Result'
+import Leaderboard from './pages/Leaderboard'
 
 export default function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
         <Routes>
-          {/* Public routes */}
+
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
 
-          {/* Teacher routes */}
           <Route
             path="/teacher/dashboard"
             element={
               <ProtectedRoute role="teacher">
-                <TeacherDashboard />
+                <Layout><TeacherDashboard /></Layout>
               </ProtectedRoute>
             }
           />
@@ -34,17 +34,17 @@ export default function App() {
             path="/teacher/generate-test"
             element={
               <ProtectedRoute role="teacher">
-                <GenerateTest />
+                <Layout><GenerateTest /></Layout>
               </ProtectedRoute>
             }
           />
 
-          {/* Student routes */}
+      
           <Route
             path="/student/dashboard"
             element={
               <ProtectedRoute role="student">
-                <StudentDashboard />
+                <Layout><StudentDashboard /></Layout>
               </ProtectedRoute>
             }
           />
@@ -52,7 +52,7 @@ export default function App() {
             path="/student/tests"
             element={
               <ProtectedRoute role="student">
-                <TestList />
+                <Layout><TestList /></Layout>
               </ProtectedRoute>
             }
           />
@@ -60,22 +60,28 @@ export default function App() {
             path="/student/test/:id"
             element={
               <ProtectedRoute role="student">
-                <AttemptTest />
+                <Layout><AttemptTest /></Layout>
               </ProtectedRoute>
             }
           />
 
-          {/* Shared result route */}
           <Route
             path="/result/:id"
             element={
               <ProtectedRoute>
-                <Result />
+                <Layout><Result /></Layout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/leaderboard"
+            element={
+              <ProtectedRoute>
+                <Layout><Leaderboard /></Layout>
               </ProtectedRoute>
             }
           />
 
-          {/* Fallback */}
           <Route path="/" element={<Navigate to="/login" replace />} />
           <Route path="*" element={<Navigate to="/login" replace />} />
         </Routes>

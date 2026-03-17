@@ -1,7 +1,7 @@
 // src/pages/StudentDashboard.jsx
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import Navbar from '../components/Navbar'
+
 import { useAuth } from '../context/AuthContext'
 import { getResultsByStudent, getTestById } from '../firebase/firestore'
 import { RadarChart, Radar, PolarGrid, PolarAngleAxis, ResponsiveContainer, Tooltip } from 'recharts'
@@ -71,7 +71,7 @@ export default function StudentDashboard() {
 
   return (
     <div className="min-h-screen mesh-bg">
-      <Navbar />
+
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
 
         {/* Header */}

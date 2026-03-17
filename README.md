@@ -1,4 +1,4 @@
-# ⚡ VidyaAI — Smart Classroom Assessment Platform
+# ⚡ AIGuru — Smart Classroom Assessment Platform
 
 An AI-powered classroom assessment platform where **teachers generate tests with Gemini AI** and **students receive personalised performance feedback**.
 
@@ -6,22 +6,22 @@ An AI-powered classroom assessment platform where **teachers generate tests with
 
 ## 🚀 Tech Stack
 
-| Layer | Technology |
-|---|---|
-| Frontend | React 18 + Vite |
-| Styling | Tailwind CSS |
-| Routing | React Router v6 |
-| Auth | Firebase Authentication |
-| Database | Firebase Firestore |
-| AI | Google Gemini 1.5 Flash |
-| Charts | Recharts |
+| Layer    | Technology              |
+| -------- | ----------------------- |
+| Frontend | React 18 + Vite         |
+| Styling  | Tailwind CSS            |
+| Routing  | React Router v6         |
+| Auth     | Firebase Authentication |
+| Database | Firebase Firestore      |
+| AI       | Google Gemini 1.5 Flash |
+| Charts   | Recharts                |
 
 ---
 
 ## 📁 Project Structure
 
 ```
-vidyaai/
+aiguru/
 ├── src/
 │   ├── components/
 │   │   ├── Navbar.jsx          # Sticky nav with role-aware links
@@ -62,7 +62,7 @@ vidyaai/
 
 ```bash
 git clone <your-repo-url>
-cd vidyaai
+cd aiguru
 npm install
 ```
 
@@ -108,12 +108,12 @@ VITE_GEMINI_API_KEY=...
 
 In Firebase Console → Firestore → Indexes, add these **composite indexes**:
 
-| Collection | Fields | Order |
-|---|---|---|
-| `tests` | `createdBy` ASC, `createdAt` DESC | — |
-| `tests` | `published` ASC, `createdAt` DESC | — |
-| `results` | `studentId` ASC, `submittedAt` DESC | — |
-| `results` | `testId` ASC, `submittedAt` DESC | — |
+| Collection | Fields                              | Order |
+| ---------- | ----------------------------------- | ----- |
+| `tests`    | `createdBy` ASC, `createdAt` DESC   | —     |
+| `tests`    | `published` ASC, `createdAt` DESC   | —     |
+| `results`  | `studentId` ASC, `submittedAt` DESC | —     |
+| `results`  | `testId` ASC, `submittedAt` DESC    | —     |
 
 ### 6. Run the app
 
@@ -128,6 +128,7 @@ Visit `http://localhost:5173`
 ## 🧭 Usage Flow
 
 ### Teacher
+
 1. Register with role **Teacher**
 2. Go to **Generate Test** → enter topic, difficulty, question count
 3. AI generates MCQs → review and edit
@@ -135,6 +136,7 @@ Visit `http://localhost:5173`
 5. View student scores and analytics on **Dashboard**
 
 ### Student
+
 1. Register with role **Student**
 2. Go to **Browse Tests** → pick a test
 3. Answer all questions, navigate with number pad
@@ -145,11 +147,11 @@ Visit `http://localhost:5173`
 
 ## 🔥 AI Features
 
-| Feature | Implementation |
-|---|---|
-| **AI Test Generation** | Gemini generates structured JSON MCQs |
+| Feature                     | Implementation                                                |
+| --------------------------- | ------------------------------------------------------------- |
+| **AI Test Generation**      | Gemini generates structured JSON MCQs                         |
 | **AI Performance Analysis** | Gemini analyses wrong answers and gives personalized feedback |
-| **Editable Questions** | Teachers can edit any generated question before publishing |
+| **Editable Questions**      | Teachers can edit any generated question before publishing    |
 
 ---
 

@@ -1,8 +1,8 @@
 // src/pages/TestList.jsx
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import Navbar from '../components/Navbar'
-import { getAllPublishedTests } from '../firebase/firestore'
+import { useAuth } from '../context/AuthContext'
+import { getAllPublishedTests, getResultsByStudent } from '../firebase/firestore'
 
 const difficultyColor = {
   Easy: 'badge-green',
@@ -11,17 +11,29 @@ const difficultyColor = {
 }
 
 export default function TestList() {
+  const { userProfile } = useAuth()
   const [tests, setTests] = useState([])
   const [filtered, setFiltered] = useState([])
+  const [attemptMap, setAttemptMap] = useState({})
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
   const [diffFilter, setDiffFilter] = useState('All')
 
   useEffect(() => {
-    getAllPublishedTests()
-      .then(data => { setTests(data); setFiltered(data) })
+    if (!userProfile?.id) return
+    Promise.all([
+      getAllPublishedTests(),
+      getResultsByStudent(userProfile.id)
+    ])
+      .then(([testData, results]) => {
+        setTests(testData)
+        setFiltered(testData)
+        const map = {}
+        results.forEach(r => { map[r.testId] = r.id })
+        setAttemptMap(map)
+      })
       .finally(() => setLoading(false))
-  }, [])
+  }, [userProfile?.id])
 
   useEffect(() => {
     let result = tests
@@ -40,7 +52,7 @@ export default function TestList() {
 
   return (
     <div className="min-h-screen mesh-bg">
-      <Navbar />
+
       <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
 
         <div className="mb-8 animate-fade-in">
@@ -105,12 +117,21 @@ export default function TestList() {
                   <span className="text-xs text-slate-500 font-body">
                     {test.createdAt?.toDate?.()?.toLocaleDateString() || '—'}
                   </span>
-                  <Link
-                    to={`/student/test/${test.id}`}
-                    className="btn-primary text-sm py-2 px-4"
-                  >
-                    Start →
-                  </Link>
+                  {attemptMap[test.id] ? (
+                    <Link
+                      to={`/result/${attemptMap[test.id]}`}
+                      className="btn-secondary text-sm py-2 px-4 opacity-80"
+                    >
+                      View Result
+                    </Link>
+                  ) : (
+                    <Link
+                      to={`/student/test/${test.id}`}
+                      className="btn-primary text-sm py-2 px-4"
+                    >
+                      Start →
+                    </Link>
+                  )}
                 </div>
               </div>
             ))}

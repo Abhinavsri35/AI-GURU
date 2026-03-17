@@ -1,7 +1,7 @@
 // src/pages/TeacherDashboard.jsx
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import Navbar from '../components/Navbar'
+
 import { useAuth } from '../context/AuthContext'
 import { getTestsByTeacher, getResultsByTest } from '../firebase/firestore'
 import {
@@ -91,7 +91,7 @@ export default function TeacherDashboard() {
 
   return (
     <div className="min-h-screen mesh-bg">
-      <Navbar />
+
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
 
         {/* Header */}
@@ -157,7 +157,7 @@ export default function TeacherDashboard() {
                   ✨
                 </div>
                 <div>
-                  <p className="text-white font-body font-medium text-sm">Generate AI Test</p>
+                  <p className="text-white font-body font-medium text-sm">Create Test</p>
                   <p className="text-slate-500 text-xs font-body mt-0.5">Create MCQs with Gemini</p>
                 </div>
               </Link>
@@ -189,7 +189,7 @@ export default function TeacherDashboard() {
               <table className="w-full">
                 <thead>
                   <tr className="border-b border-white/5">
-                    {['Test Title', 'Topic', 'Questions', 'Status', 'Created'].map(h => (
+                    {['Subject Title', 'Topic', 'Questions', 'Status', 'Created'].map(h => (
                       <th key={h} className="text-left pb-3 text-xs font-body font-medium text-slate-500 uppercase tracking-widest">{h}</th>
                     ))}
                   </tr>

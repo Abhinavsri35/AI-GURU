@@ -46,21 +46,29 @@ export const getTestById = async (testId) => {
 export const getTestsByTeacher = async (teacherId) => {
   const q = query(
     collection(db, 'tests'),
-    where('createdBy', '==', teacherId),
-    orderBy('createdAt', 'desc')
+    where('createdBy', '==', teacherId)
   )
   const snap = await getDocs(q)
-  return snap.docs.map((d) => ({ id: d.id, ...d.data() }))
+  const tests = snap.docs.map((d) => ({ id: d.id, ...d.data() }))
+  return tests.sort((a, b) => {
+    const timeA = a.createdAt?.toMillis?.() || 0;
+    const timeB = b.createdAt?.toMillis?.() || 0;
+    return timeB - timeA;
+  })
 }
 
 export const getAllPublishedTests = async () => {
   const q = query(
     collection(db, 'tests'),
-    where('published', '==', true),
-    orderBy('createdAt', 'desc')
+    where('published', '==', true)
   )
   const snap = await getDocs(q)
-  return snap.docs.map((d) => ({ id: d.id, ...d.data() }))
+  const tests = snap.docs.map((d) => ({ id: d.id, ...d.data() }))
+  return tests.sort((a, b) => {
+    const timeA = a.createdAt?.toMillis?.() || 0;
+    const timeB = b.createdAt?.toMillis?.() || 0;
+    return timeB - timeA;
+  })
 }
 
 export const updateTest = async (testId, data) => {
@@ -85,20 +93,33 @@ export const getResultById = async (resultId) => {
 export const getResultsByStudent = async (studentId) => {
   const q = query(
     collection(db, 'results'),
-    where('studentId', '==', studentId),
-    orderBy('submittedAt', 'desc')
+    where('studentId', '==', studentId)
   )
   const snap = await getDocs(q)
-  return snap.docs.map((d) => ({ id: d.id, ...d.data() }))
+  const results = snap.docs.map((d) => ({ id: d.id, ...d.data() }))
+  return results.sort((a, b) => {
+    const timeA = a.submittedAt?.toMillis?.() || 0;
+    const timeB = b.submittedAt?.toMillis?.() || 0;
+    return timeB - timeA;
+  })
 }
 
 export const getResultsByTest = async (testId) => {
   const q = query(
     collection(db, 'results'),
-    where('testId', '==', testId),
-    orderBy('submittedAt', 'desc')
+    where('testId', '==', testId)
   )
   const snap = await getDocs(q)
+  const results = snap.docs.map((d) => ({ id: d.id, ...d.data() }))
+  return results.sort((a, b) => {
+    const timeA = a.submittedAt?.toMillis?.() || 0;
+    const timeB = b.submittedAt?.toMillis?.() || 0;
+    return timeB - timeA;
+  })
+}
+
+export const getAllResults = async () => {
+  const snap = await getDocs(collection(db, 'results'))
   return snap.docs.map((d) => ({ id: d.id, ...d.data() }))
 }
 

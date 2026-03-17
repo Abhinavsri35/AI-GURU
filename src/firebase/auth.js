@@ -4,6 +4,7 @@ import {
   signInWithEmailAndPassword,
   signOut,
   onAuthStateChanged,
+  sendEmailVerification
 } from 'firebase/auth'
 import { auth } from './firebaseConfig'
 import { createUserDocument } from './firestore'
@@ -20,6 +21,10 @@ export const registerUser = async (name, email, password, role) => {
   const user = userCredential.user
   // Save profile + role to Firestore
   await createUserDocument(user.uid, { name, email, role })
+  
+  await sendEmailVerification(user)
+  await signOut(auth)
+
   return user
 }
 

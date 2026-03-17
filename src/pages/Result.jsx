@@ -1,7 +1,7 @@
 // src/pages/Result.jsx
 import { useEffect, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
-import Navbar from '../components/Navbar'
+
 import QuestionCard from '../components/QuestionCard'
 import { getResultById, getTestById } from '../firebase/firestore'
 import { useAuth } from '../context/AuthContext'
@@ -64,7 +64,7 @@ export default function Result() {
   if (loading) {
     return (
       <div className="min-h-screen mesh-bg">
-        <Navbar />
+
         <div className="flex items-center justify-center h-[calc(100vh-64px)]">
           <div className="text-center">
             <div className="w-10 h-10 border-2 border-gold-400/30 border-t-gold-400 rounded-full animate-spin mx-auto mb-4" />
@@ -78,7 +78,7 @@ export default function Result() {
   if (!result) {
     return (
       <div className="min-h-screen mesh-bg">
-        <Navbar />
+
         <div className="flex items-center justify-center h-[calc(100vh-64px)]">
           <div className="card text-center max-w-sm mx-4">
             <p className="text-4xl mb-3">🔍</p>
@@ -93,7 +93,7 @@ export default function Result() {
 
   return (
     <div className="min-h-screen mesh-bg">
-      <Navbar />
+
       <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
 
         {/* Header */}

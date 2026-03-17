@@ -7,27 +7,29 @@ import { useAuth } from '../context/AuthContext'
 export default function Register() {
   const [form, setForm] = useState({ name: '', email: '', password: '', confirm: '', role: 'student' })
   const [error, setError] = useState('')
+  const [success, setSuccess] = useState('')
   const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
-  const { userProfile } = useAuth()
+  const { userProfile, currentUser } = useAuth()
 
   // Navigate once AuthContext has resolved the Firestore profile.
   // Do NOT navigate inside handleSubmit — the document may not be
   // readable yet when onAuthStateChanged fires immediately after signup.
   useEffect(() => {
-    if (userProfile) {
+    if (userProfile && currentUser?.emailVerified) {
       navigate(
         userProfile.role === 'teacher' ? '/teacher/dashboard' : '/student/dashboard',
         { replace: true }
       )
     }
-  }, [userProfile, navigate])
+  }, [userProfile, currentUser, navigate])
 
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value })
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     setError('')
+    setSuccess('')
     if (form.password !== form.confirm) {
       setError('Passwords do not match.')
       return
@@ -40,12 +42,15 @@ export default function Register() {
     try {
       // Create account — navigation handled by useEffect above
       await registerUser(form.name.trim(), form.email, form.password, form.role)
+      setSuccess('Registration successful! Please check your email to verify your account.')
+      setForm({ name: '', email: '', password: '', confirm: '', role: 'student' })
+      setLoading(false)
     } catch (err) {
       const code = err.code
       if (code === 'auth/email-already-in-use') setError('Email already in use.')
       else if (code === 'auth/invalid-email') setError('Invalid email address.')
       else setError('Registration failed. Please try again.')
-      setLoading(false) // only reset on error; on success stay in loading while AuthContext resolves
+      setLoading(false)
     }
   }
 
@@ -62,7 +67,7 @@ export default function Register() {
               <span className="text-gold-400 text-lg">⚡</span>
             </div>
             <h1 className="text-2xl font-display font-semibold text-white">
-              Vidya<span className="text-gold-400">AI</span>
+              AI<span className="text-gold-400">Guru</span>
             </h1>
           </div>
           <p className="text-slate-400 font-body text-sm">Smart Classroom Assessment Platform</p>
@@ -70,11 +75,17 @@ export default function Register() {
 
         <div className="card">
           <h2 className="text-xl font-display font-semibold text-white mb-1">Create account</h2>
-          <p className="text-sm text-slate-400 font-body mb-6">Join VidyaAI and start learning or teaching</p>
+          <p className="text-sm text-slate-400 font-body mb-6">Join AIGuru and start learning or teaching</p>
 
           {error && (
             <div className="mb-4 px-4 py-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm font-body">
               {error}
+            </div>
+          )}
+
+          {success && (
+            <div className="mb-4 px-4 py-3 rounded-xl bg-green-500/10 border border-green-500/20 text-green-400 text-sm font-body">
+              {success}
             </div>
           )}
 
