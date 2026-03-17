@@ -1,3 +1,4 @@
+// src/firebase/firestore.js
 import {
   doc,
   getDoc,
@@ -13,6 +14,7 @@ import {
 } from 'firebase/firestore'
 import { db } from './firebaseConfig'
 
+// ─── Users ────────────────────────────────────────────────────────────────────
 
 export const createUserDocument = async (uid, data) => {
   await setDoc(doc(db, 'users', uid), {
@@ -26,6 +28,7 @@ export const getUserDocument = async (uid) => {
   return snap.exists() ? { id: snap.id, ...snap.data() } : null
 }
 
+// ─── Tests ────────────────────────────────────────────────────────────────────
 
 export const createTest = async (testData) => {
   const ref = await addDoc(collection(db, 'tests'), {
@@ -43,27 +46,28 @@ export const getTestById = async (testId) => {
 export const getTestsByTeacher = async (teacherId) => {
   const q = query(
     collection(db, 'tests'),
-    where('createdBy', '==', teacherId)
+    where('createdBy', '==', teacherId),
+    orderBy('createdAt', 'desc')
   )
   const snap = await getDocs(q)
-  const data = snap.docs.map((d) => ({ id: d.id, ...d.data() }))
-  return data.sort((a, b) => (b.createdAt?.toMillis?.() || 0) - (a.createdAt?.toMillis?.() || 0))
+  return snap.docs.map((d) => ({ id: d.id, ...d.data() }))
 }
 
 export const getAllPublishedTests = async () => {
   const q = query(
     collection(db, 'tests'),
-    where('published', '==', true)
+    where('published', '==', true),
+    orderBy('createdAt', 'desc')
   )
   const snap = await getDocs(q)
-  const data = snap.docs.map((d) => ({ id: d.id, ...d.data() }))
-  return data.sort((a, b) => (b.createdAt?.toMillis?.() || 0) - (a.createdAt?.toMillis?.() || 0))
+  return snap.docs.map((d) => ({ id: d.id, ...d.data() }))
 }
 
 export const updateTest = async (testId, data) => {
   await updateDoc(doc(db, 'tests', testId), data)
 }
 
+// ─── Results ──────────────────────────────────────────────────────────────────
 
 export const saveResult = async (resultData) => {
   const ref = await addDoc(collection(db, 'results'), {
@@ -81,26 +85,28 @@ export const getResultById = async (resultId) => {
 export const getResultsByStudent = async (studentId) => {
   const q = query(
     collection(db, 'results'),
-    where('studentId', '==', studentId)
+    where('studentId', '==', studentId),
+    orderBy('submittedAt', 'desc')
   )
   const snap = await getDocs(q)
-  const data = snap.docs.map((d) => ({ id: d.id, ...d.data() }))
-  return data.sort((a, b) => (b.submittedAt?.toMillis?.() || 0) - (a.submittedAt?.toMillis?.() || 0))
+  return snap.docs.map((d) => ({ id: d.id, ...d.data() }))
 }
 
 export const getResultsByTest = async (testId) => {
   const q = query(
     collection(db, 'results'),
-    where('testId', '==', testId)
+    where('testId', '==', testId),
+    orderBy('submittedAt', 'desc')
   )
   const snap = await getDocs(q)
-  const data = snap.docs.map((d) => ({ id: d.id, ...d.data() }))
-  return data.sort((a, b) => (b.submittedAt?.toMillis?.() || 0) - (a.submittedAt?.toMillis?.() || 0))
+  return snap.docs.map((d) => ({ id: d.id, ...d.data() }))
 }
 
 export const updateResult = async (resultId, data) => {
   await updateDoc(doc(db, 'results', resultId), data)
 }
+
+// ─── Analytics helpers ────────────────────────────────────────────────────────
 
 export const getAnalyticsForTeacher = async (teacherId) => {
   const tests = await getTestsByTeacher(teacherId)

@@ -1,13 +1,27 @@
 // src/pages/Register.jsx
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { registerUser } from '../firebase/auth'
+import { useAuth } from '../context/AuthContext'
 
 export default function Register() {
   const [form, setForm] = useState({ name: '', email: '', password: '', confirm: '', role: 'student' })
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
+  const { userProfile } = useAuth()
+
+  // Navigate once AuthContext has resolved the Firestore profile.
+  // Do NOT navigate inside handleSubmit — the document may not be
+  // readable yet when onAuthStateChanged fires immediately after signup.
+  useEffect(() => {
+    if (userProfile) {
+      navigate(
+        userProfile.role === 'teacher' ? '/teacher/dashboard' : '/student/dashboard',
+        { replace: true }
+      )
+    }
+  }, [userProfile, navigate])
 
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value })
 
@@ -24,15 +38,14 @@ export default function Register() {
     }
     setLoading(true)
     try {
+      // Create account — navigation handled by useEffect above
       await registerUser(form.name.trim(), form.email, form.password, form.role)
-      navigate(form.role === 'teacher' ? '/teacher/dashboard' : '/student/dashboard')
     } catch (err) {
       const code = err.code
       if (code === 'auth/email-already-in-use') setError('Email already in use.')
       else if (code === 'auth/invalid-email') setError('Invalid email address.')
       else setError('Registration failed. Please try again.')
-    } finally {
-      setLoading(false)
+      setLoading(false) // only reset on error; on success stay in loading while AuthContext resolves
     }
   }
 
@@ -83,7 +96,6 @@ export default function Register() {
               <input name="confirm" type="password" value={form.confirm} onChange={handleChange} className="input" placeholder="••••••••" required />
             </div>
 
-            {/* Role selector */}
             <div>
               <label className="label">I am a…</label>
               <div className="grid grid-cols-2 gap-3">
@@ -112,7 +124,7 @@ export default function Register() {
               {loading ? (
                 <>
                   <div className="w-4 h-4 border-2 border-navy-950/30 border-t-navy-950 rounded-full animate-spin" />
-                  Creating account…
+                  Setting up your account…
                 </>
               ) : 'Create account'}
             </button>

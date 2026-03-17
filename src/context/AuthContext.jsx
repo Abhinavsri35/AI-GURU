@@ -14,7 +14,15 @@ export const AuthProvider = ({ children }) => {
     const unsubscribe = onAuthChange(async (user) => {
       setCurrentUser(user)
       if (user) {
-        const profile = await getUserDocument(user.uid)
+        // Retry up to 5 times with increasing delay.
+        // Needed because onAuthStateChanged fires before createUserDocument
+        // finishes writing — so the document may not exist yet on first read.
+        let profile = null
+        for (let attempt = 0; attempt < 5; attempt++) {
+          profile = await getUserDocument(user.uid)
+          if (profile) break
+          await new Promise((r) => setTimeout(r, 400 * (attempt + 1)))
+        }
         setUserProfile(profile)
       } else {
         setUserProfile(null)
