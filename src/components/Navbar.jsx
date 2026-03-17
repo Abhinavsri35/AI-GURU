@@ -1,7 +1,7 @@
-// src/components/Navbar.jsx
 import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { logoutUser } from '../firebase/auth'
+import logoImg from '../assets/bg-logo.png';
 
 const LogoMark = () => (
   <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
@@ -39,20 +39,17 @@ export default function Navbar() {
 
   return (
     <>
-      {/* Mobile Top Bar */}
       <div className="md:hidden sticky top-0 z-50 flex items-center justify-between p-4 border-b border-white/5 backdrop-blur-xl bg-navy-950/80">
         <Link to={isTeacher ? '/teacher/dashboard' : '/student/dashboard'} className="flex items-center gap-2">
-          <LogoMark />
+          <img className='w-10 h-10' src={logoImg} alt='logo'/>
           <span className="font-display font-semibold text-lg text-white">AI<span className="text-gold-400">Guru</span></span>
         </Link>
-        {/* Simple mobile menu handler could go here (omitted for simplicity, users will use main view or we just put links below) */}
       </div>
 
-      {/* Desktop Sidebar */}
       <nav className="fixed left-0 top-0 h-screen w-0 md:w-64 border-r border-white/5 backdrop-blur-xl bg-navy-950/80 z-40 hidden md:flex flex-col transition-all overflow-hidden duration-300">
         <div className="p-6 flex-shrink-0">
           <Link to={isTeacher ? '/teacher/dashboard' : '/student/dashboard'} className="flex items-center gap-2.5 group">
-            <LogoMark />
+             <img className='w-10 h-10' src={logoImg} alt='logo'/>
             <span className="font-display font-semibold text-2xl text-white tracking-tight">
               AI<span className="text-gold-400">Guru</span>
             </span>
@@ -98,7 +95,6 @@ export default function Navbar() {
         )}
       </nav>
 
-      {/* Mobile Sticky Navigation Bottom (Optional fallback) or just hide side links on mobile */}
       <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-navy-950/90 backdrop-blur-md border-t border-white/5 pb-safe">
         <div className="flex items-center justify-around p-2">
           {currentUser && links.map((link) => (

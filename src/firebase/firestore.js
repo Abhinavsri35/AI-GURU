@@ -1,4 +1,3 @@
-// src/firebase/firestore.js
 import {
   doc,
   getDoc,
@@ -15,7 +14,6 @@ import {
 } from 'firebase/firestore'
 import { db } from './firebaseConfig'
 
-// ─── Users ────────────────────────────────────────────────────────────────────
 
 export const createUserDocument = async (uid, data) => {
   await setDoc(doc(db, 'users', uid), {
@@ -29,7 +27,6 @@ export const getUserDocument = async (uid) => {
   return snap.exists() ? { id: snap.id, ...snap.data() } : null
 }
 
-// ─── Tests ────────────────────────────────────────────────────────────────────
 
 export const createTest = async (testData) => {
   const ref = await addDoc(collection(db, 'tests'), {
@@ -88,7 +85,6 @@ export const updateTest = async (testId, data) => {
   await updateDoc(doc(db, 'tests', testId), data)
 }
 
-// ─── Results ──────────────────────────────────────────────────────────────────
 
 export const saveResult = async (resultData) => {
   const ref = await addDoc(collection(db, 'results'), {
@@ -140,7 +136,6 @@ export const updateResult = async (resultId, data) => {
   await updateDoc(doc(db, 'results', resultId), data)
 }
 
-// ─── Analytics helpers ────────────────────────────────────────────────────────
 
 export const getAnalyticsForTeacher = async (teacherId) => {
   const tests = await getTestsByTeacher(teacherId)

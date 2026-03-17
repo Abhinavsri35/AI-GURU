@@ -1,10 +1,10 @@
-# ⚡ AIGuru — Smart Classroom Assessment Platform
+# AIGuru — Smart Classroom Assessment Platform
 
 An AI-powered classroom assessment platform where **teachers generate tests with Gemini AI** and **students receive personalised performance feedback**.
 
 ---
 
-## 🚀 Tech Stack
+## Tech Stack
 
 | Layer    | Technology              |
 | -------- | ----------------------- |
@@ -18,7 +18,7 @@ An AI-powered classroom assessment platform where **teachers generate tests with
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 aiguru/
@@ -56,7 +56,7 @@ aiguru/
 
 ---
 
-## ⚙️ Setup Instructions
+## Setup Instructions
 
 ### 1. Clone & install
 
@@ -125,7 +125,7 @@ Visit `http://localhost:5173`
 
 ---
 
-## 🧭 Usage Flow
+## Usage Flow
 
 ### Teacher
 
@@ -145,7 +145,7 @@ Visit `http://localhost:5173`
 
 ---
 
-## 🔥 AI Features
+## AI Features
 
 | Feature                     | Implementation                                                |
 | --------------------------- | ------------------------------------------------------------- |
@@ -155,7 +155,7 @@ Visit `http://localhost:5173`
 
 ---
 
-## 🛡️ Security
+## Security
 
 - All Firebase API calls are authenticated
 - Firestore rules enforce role-based access
@@ -165,7 +165,7 @@ Visit `http://localhost:5173`
 
 ---
 
-## 📦 Build for production
+## Build for production
 
 ```bash
 npm run build
@@ -175,7 +175,7 @@ Output is in `dist/`. Deploy to Firebase Hosting, Vercel, or Netlify.
 
 ---
 
-## 🙋 Common Issues
+## Common Issues
 
 **Q: Firestore permission denied?**  
 A: Deploy `firestore.rules` and add the composite indexes listed above.

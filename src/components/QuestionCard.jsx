@@ -1,4 +1,3 @@
-// src/components/QuestionCard.jsx
 
 export default function QuestionCard({
   question,
@@ -16,7 +15,6 @@ export default function QuestionCard({
       return 'border-white/10 text-slate-300 hover:border-white/25 hover:bg-white/3'
     }
 
-    // Show result mode
     if (option === question.correctAnswer) {
       return 'border-emerald-400/60 bg-emerald-400/10 text-emerald-300'
     }

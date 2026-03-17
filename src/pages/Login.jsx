@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { loginUser, logoutUser } from '../firebase/auth'
 import { getUserDocument } from '../firebase/firestore'
 import { useAuth } from '../context/AuthContext'
+import logoImg from '../assets/bg-logo.png';
 
 export default function Login() {
   const [email, setEmail] = useState('')
@@ -60,8 +61,8 @@ export default function Login() {
         {/* Logo */}
         <div className="text-center mb-8">
           <div className="inline-flex items-center gap-3 mb-3">
-            <div className="w-10 h-10 rounded-xl bg-gold-400/10 border border-gold-400/20 flex items-center justify-center">
-              <span className="text-gold-400 text-lg">⚡</span>
+            <div className="w-14 h-14 rounded-xl flex items-center justify-center">
+                <img src={logoImg} alt='logo'/>
             </div>
             <h1 className="text-2xl font-display font-semibold text-white">
               AI<span className="text-gold-400">Guru</span>

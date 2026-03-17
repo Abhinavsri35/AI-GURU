@@ -1,4 +1,3 @@
-// src/pages/AttemptTest.jsx
 import { useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 
@@ -181,7 +180,6 @@ export default function AttemptTest() {
           </div>
         </div>
 
-        {/* Question navigator */}
         <div className="flex flex-wrap gap-2 mb-8">
           {test.questions.map((_, i) => (
             <button
@@ -199,7 +197,6 @@ export default function AttemptTest() {
           ))}
         </div>
 
-        {/* Current question */}
         <div className="mb-6">
           <QuestionCard
             question={test.questions[current]}
@@ -209,7 +206,6 @@ export default function AttemptTest() {
           />
         </div>
 
-        {/* Navigation */}
         <div className="flex items-center justify-between gap-3">
           <button
             onClick={() => setCurrent(c => Math.max(0, c - 1))}

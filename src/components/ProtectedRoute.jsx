@@ -1,4 +1,3 @@
-// src/components/ProtectedRoute.jsx
 import { Navigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 
@@ -24,7 +23,6 @@ export default function ProtectedRoute({ children, role }) {
     return <Navigate to="/login" replace />
   }
 
-  // If a specific role is required, check it
   if (role && userProfile?.role !== role) {
     const redirect = userProfile?.role === 'teacher' ? '/teacher/dashboard' : '/student/dashboard'
     return <Navigate to={redirect} replace />
