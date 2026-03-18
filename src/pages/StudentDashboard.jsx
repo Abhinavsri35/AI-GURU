@@ -1,10 +1,8 @@
-// src/pages/StudentDashboard.jsx
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 
 import { useAuth } from '../context/AuthContext'
 import { getResultsByStudent, getTestById } from '../firebase/firestore'
-import { RadarChart, Radar, PolarGrid, PolarAngleAxis, ResponsiveContainer, Tooltip } from 'recharts'
 
 const ScoreRing = ({ score }) => {
   const r = 38

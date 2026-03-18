@@ -69,15 +69,12 @@ export default function AttemptTest() {
 
     setSubmitting(true)
     try {
-      // Calculate score
       const total = test.questions.length
       const correct = test.questions.filter((q, i) => answers[i] === q.correctAnswer).length
       const score = Math.round((correct / total) * 100)
 
-      // Build answers array
       const answersArray = test.questions.map((_, i) => answers[i] || null)
 
-      // Get AI feedback
       let aiFeedback = ''
       try {
         aiFeedback = await analyzePerformance(test.questions, answersArray)
@@ -85,7 +82,6 @@ export default function AttemptTest() {
         aiFeedback = 'AI feedback unavailable. Please check your Gemini API key.'
       }
 
-      // Save result
       const resultId = await saveResult({
         studentId: userProfile.id,
         studentName: userProfile.name,

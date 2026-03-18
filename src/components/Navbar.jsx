@@ -3,15 +3,6 @@ import { useAuth } from '../context/AuthContext'
 import { logoutUser } from '../firebase/auth'
 import logoImg from '../assets/bg-logo.png';
 
-const LogoMark = () => (
-  <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
-    <rect x="2" y="14" width="10" height="12" rx="1.5" fill="#fbbf24" opacity="0.9" />
-    <rect x="8" y="8" width="10" height="18" rx="1.5" fill="#fbbf24" opacity="0.6" />
-    <rect x="14" y="4" width="10" height="22" rx="1.5" fill="#fbbf24" opacity="0.3" />
-    <circle cx="7" cy="7" r="3" fill="#fbbf24" />
-  </svg>
-)
-
 export default function Navbar() {
   const { currentUser, userProfile } = useAuth()
   const navigate = useNavigate()

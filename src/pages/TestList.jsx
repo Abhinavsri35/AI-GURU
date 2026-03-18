@@ -1,4 +1,3 @@
-// src/pages/TestList.jsx
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { getTestByCode, getResultsByStudent } from '../firebase/firestore'
@@ -32,22 +31,18 @@ export default function TestList() {
         return
       }
 
-      // 2. Check if the test is actually published
       if (!test.published) {
         setError('This test is not currently published or available.')
         setLoading(false)
         return
       }
 
-      // 3. Check if the student has already taken it
       const results = await getResultsByStudent(userProfile.id)
       const existingAttempt = results.find(r => r.testId === test.id)
 
       if (existingAttempt) {
-        // Redirect to their result
         navigate(`/result/${existingAttempt.id}`)
       } else {
-        // Redirect to attempt the test
         navigate(`/student/test/${test.id}`)
       }
 

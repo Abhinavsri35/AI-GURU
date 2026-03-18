@@ -1,4 +1,3 @@
-// src/pages/TeacherDashboard.jsx
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 
@@ -67,7 +66,6 @@ export default function TeacherDashboard() {
           setAvgScore(Math.round(avg))
         }
 
-        // Build chart data: avg score per test
         const data = await Promise.all(
           myTests.slice(0, 6).map(async (test) => {
             const results = await getResultsByTest(test.id)

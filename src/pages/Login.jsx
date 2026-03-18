@@ -1,4 +1,3 @@
-// src/pages/Login.jsx
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { loginUser, logoutUser } from '../firebase/auth'
@@ -14,7 +13,6 @@ export default function Login() {
   const navigate = useNavigate()
   const { currentUser, userProfile } = useAuth()
 
-  // If already logged in, redirect
   if (currentUser && userProfile && currentUser.emailVerified) {
     navigate(userProfile.role === 'teacher' ? '/teacher/dashboard' : '/student/dashboard')
   }
@@ -51,7 +49,6 @@ export default function Login() {
 
   return (
     <div className="min-h-screen mesh-bg flex items-center justify-center p-4">
-      {/* Background decorative lines */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-1/4 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gold-400/10 to-transparent" />
         <div className="absolute top-3/4 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gold-400/5 to-transparent" />

@@ -1,8 +1,6 @@
-// src/pages/GenerateTest.jsx
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-import QuestionCard from '../components/QuestionCard'
 import { useAuth } from '../context/AuthContext'
 import { generateQuestions } from '../services/aiService'
 import { createTest } from '../firebase/firestore'
@@ -10,7 +8,7 @@ import { createTest } from '../firebase/firestore'
 const difficulties = ['Easy', 'Medium', 'Hard']
 const questionCounts = [3, 5, 8, 10]
 
-const steps = ['Configure', 'Review & Edit', 'Publish']
+const steps = ['Create', 'Review & Edit', 'Publish']
 
 export default function GenerateTest() {
   const { userProfile } = useAuth()

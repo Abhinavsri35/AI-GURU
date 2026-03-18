@@ -1,4 +1,3 @@
-// src/pages/Register.jsx
 import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { registerUser } from '../firebase/auth'
@@ -13,9 +12,6 @@ export default function Register() {
   const navigate = useNavigate()
   const { userProfile, currentUser } = useAuth()
 
-  // Navigate once AuthContext has resolved the Firestore profile.
-  // Do NOT navigate inside handleSubmit — the document may not be
-  // readable yet when onAuthStateChanged fires immediately after signup.
   useEffect(() => {
     if (userProfile && currentUser?.emailVerified) {
       navigate(
@@ -41,7 +37,6 @@ export default function Register() {
     }
     setLoading(true)
     try {
-      // Create account — navigation handled by useEffect above
       await registerUser(form.name.trim(), form.email, form.password, form.role)
       setSuccess('Registration successful! Please check your email to verify your account.')
       setForm({ name: '', email: '', password: '', confirm: '', role: 'student' })

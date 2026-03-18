@@ -1,9 +1,6 @@
 const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY
 const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${GEMINI_API_KEY}`
 
-/**
- * Low-level call to Gemini
- */
 const callGemini = async (prompt) => {
   const res = await fetch(GEMINI_URL, {
     method: 'POST',
@@ -21,13 +18,6 @@ const callGemini = async (prompt) => {
   return data.candidates?.[0]?.content?.parts?.[0]?.text || ''
 }
 
-/**
- * Generate MCQ questions for a given topic
- * @param {string} topic
- * @param {'Easy'|'Medium'|'Hard'} difficulty
- * @param {number} count
- * @returns {Promise<Array>} questions array
- */
 export const generateQuestions = async (topic, difficulty, count) => {
   const prompt = `
 You are an expert educator. Generate exactly ${count} multiple-choice questions about "${topic}" at ${difficulty} difficulty level.
@@ -51,18 +41,12 @@ Rules:
 `
   const raw = await callGemini(prompt)
 
-  // Strip possible markdown code fences
   const cleaned = raw.replace(/```json|```/g, '').trim()
   const parsed = JSON.parse(cleaned)
   return parsed.questions
 }
 
-/**
- * Analyze student performance and return feedback string
- * @param {Array} questions - array of question objects
- * @param {Array} answers - student's selected answers
- * @returns {Promise<string>} AI feedback text
- */
+
 export const analyzePerformance = async (questions, answers) => {
   const breakdown = questions.map((q, i) => {
     const isCorrect = answers[i] === q.correctAnswer

@@ -1,4 +1,3 @@
-// src/pages/Result.jsx
 import { useEffect, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 
@@ -180,7 +179,6 @@ export default function Result() {
           </div>
         )}
 
-        {/* Actions */}
         <div className="flex gap-3 mt-8">
           <Link
             to={isTeacher ? '/teacher/dashboard' : '/student/dashboard'}

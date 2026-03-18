@@ -1,4 +1,3 @@
-// src/pages/Leaderboard.jsx
 import { useEffect, useState } from 'react'
 import { getAllPublishedTests, getAllResults } from '../firebase/firestore'
 import { useAuth } from '../context/AuthContext'
